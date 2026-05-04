@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+.idea/
+.vscode/
+
+# Audit outputs - never commit real client data
+*.pdf
+*.json
+*.md
+!README.md
+!docs/*.md
+!examples/*.md
+
+# Secrets
+.env
+*.secret
