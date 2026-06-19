@@ -28,6 +28,7 @@ dev = ["pytest>=7", "pytest-cov"]
 
 [project.scripts]
 m365audit = "m365audit.cli:main"
+m365audit-multi = "m365audit.cli_multi:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

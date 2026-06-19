@@ -48,6 +48,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--no-pdf", action="store_true", help="Skip PDF generation")
     p.add_argument("--no-md", action="store_true", help="Skip Markdown generation")
+    p.add_argument(
+        "--baseline", type=Path, default=None,
+        help="Path to a previous audit JSON to enable delta/trending mode.",
+    )
     p.add_argument("--verbose", "-v", action="store_true", help="Verbose logging")
     p.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return p
@@ -101,6 +105,27 @@ def run(args: argparse.Namespace) -> int:
         except ImportError:
             print("    (PDF generation skipped: install with `pip install m365audit[pdf]`)",
                   file=sys.stderr)
+
+    if args.baseline:
+        try:
+            from .delta import compute_delta, render_delta_markdown
+            delta = compute_delta(report, args.baseline)
+            delta_json_path = args.output.parent / (args.output.stem + "-delta.json")
+            import json as _json
+            delta_json_path.write_text(_json.dumps(delta.to_dict(), indent=2, default=str))
+            print(f"[+] Wrote {delta_json_path}")
+            if not args.no_md:
+                delta_md_path = args.output.parent / (args.output.stem + "-delta.md")
+                delta_md_path.write_text(render_delta_markdown(delta))
+                print(f"[+] Wrote {delta_md_path}")
+            score_change = delta.score_change
+            direction = "worse" if score_change > 0 else ("better" if score_change < 0 else "unchanged")
+            print(f"[+] Delta: {len(delta.new_findings)} new, "
+                  f"{len(delta.resolved_findings)} resolved, "
+                  f"{len(delta.persisting_findings)} persisting. "
+                  f"Score {direction} by {abs(score_change)} points.")
+        except FileNotFoundError:
+            print(f"warning: baseline file not found: {args.baseline}", file=sys.stderr)
 
     return 0
 
