@@ -244,7 +244,7 @@ This tool is original intellectual property created by Reynaud Hunter. It was de
 
 **Commercial use** requires a separate written license from the author. Commercial use includes any use where the tool or its output is part of a paid service, any use by a for-profit organization assessing its own or a client's environment, and any use by a managed service provider or consulting firm.
 
-For commercial licensing inquiries contact the author directly at [your email here].
+For commercial licensing inquiries contact the author directly at reynaud702@outlook.com.
 
 Unauthorized commercial use is a violation of the license terms.
 
